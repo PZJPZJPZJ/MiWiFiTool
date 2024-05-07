@@ -1,9 +1,16 @@
 <template>
   <div class="container">
     <div class="box">
+      <input class="inputBox" type="text" v-model="hwString" @keyup.enter="getSoftware(hwString)">
       <div class="list" v-for="item in softwareList" :key="item">
         <div class="content">
-          <h4>{{ item }}</h4>
+          <a :href=item.url>{{item.title}}{{ item.version }}</a>
+        </div>
+      </div>
+      <input class="inputBox" type="text" v-model="snString" @keyup.enter="calculate(snString)">
+      <div class="list">
+        <div class="content">
+          <p>根密码:{{ resultPassword }}</p>
         </div>
       </div>
     </div>
@@ -12,17 +19,12 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {calculate} from "@/api/GetPassword"
-import {getSoftware} from "@/api/GetFirmware";
-
-let softwareList = ref()
-
+import {calculate,resultPassword} from "@/api/GetPassword"
+import {getSoftware,softwareList} from "@/api/GetFirmware";
+let hwString = ref('RC06STA')
+let snString = ref('123/123')
 onMounted(() => {
-  console.log(calculate("123/123"))
-  getSoftware('RC06STA').then(data => {
-    softwareList = data
-    console.log(softwareList)
-  })
+
 })
 </script>
 
@@ -66,6 +68,19 @@ onMounted(() => {
 .box .list:hover {
   transform: scale(1.1);
   filter: blur(0px);
+}
+
+.inputBox{
+  width: 100%;
+  padding: 15px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 10px;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  transition: 0.5s;
 }
 
 .imgBox {
