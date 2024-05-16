@@ -1,8 +1,5 @@
-import {ref} from "vue";
-
-export let resultPassword = ref()
 export function calculate(sn) {
-    resultPassword.value = hex_md5(sn + (sn.toString().indexOf("/") > 0 ? others_salt : r1d_salt)).substr(0, 8);
+    return hex_md5(sn + (sn.toString().indexOf("/") > 0 ? others_salt : r1d_salt)).substr(0, 8);
 }
 let r1d_salt = "A2E371B0-B34B-48A5-8C40-A7133F3B5D88";
 let others_salt = "d44fb0960aa0-a5e6-4a30-250f-6d2df50a";

@@ -1,16 +1,19 @@
 <template>
   <div class="container">
     <div class="box">
-      <input class="inputBox" type="text" v-model="hwString" @keyup.enter="getSoftware(hwString)">
+      <input class="inputBox" type="text" placeholder="输入路由器型号（如RC06STA）" v-model="hwString"
+             @keyup.enter="getSoftware(hwString)">
       <div class="list" v-for="item in softwareList" :key="item">
         <div class="content">
-          <a :href=item.url>{{item.title}}{{ item.version }}</a>
+          <h2 class="rank">下载</h2>
+          <a :href=item.url>{{ item.title }}{{ item.version }}</a>
         </div>
       </div>
-      <input class="inputBox" type="text" v-model="snString" @keyup.enter="calculate(snString)">
+      <input class="inputBox" type="text" placeholder="输入路由器SN" v-model="snString"
+             @keyup.enter="pwdString=calculate(snString)">
       <div class="list">
         <div class="content">
-          <p>根密码:{{ resultPassword }}</p>
+          <p>根密码:{{ pwdString }}</p>
         </div>
       </div>
     </div>
@@ -19,10 +22,12 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {calculate,resultPassword} from "@/api/GetPassword"
-import {getSoftware,softwareList} from "@/api/GetFirmware";
-let hwString = ref('RC06STA')
-let snString = ref('123/123')
+import {calculate} from "@/api/GetPassword"
+import {getSoftware, softwareList} from "@/api/GetFirmware";
+
+let hwString = ref('')
+let snString = ref('')
+let pwdString = ref('')
 onMounted(() => {
 
 })
@@ -62,18 +67,18 @@ onMounted(() => {
 }
 
 .box:hover .list {
-  filter: blur(5px);
-}
-
-.box .list:hover {
-  transform: scale(1.1);
   filter: blur(0px);
 }
 
-.inputBox{
+.box .list:hover {
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+.inputBox {
   width: 100%;
   padding: 15px;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   outline: none;
   box-shadow: none;
@@ -83,21 +88,31 @@ onMounted(() => {
   transition: 0.5s;
 }
 
-.imgBox {
-  position: relative;
-  width: 25px;
-  height: 25px;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-right: 10px;
+.box .list .content .rank {
+  position: absolute;
+  right: 20px;
+  color: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  filter: blur(10px);
+  transition: 0.3s;
 }
 
-.imgItem {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.box .list .content .rank small {
+  font-weight: 500;
+  opacity: 0.25;
+}
+
+.box .list:hover .content .rank {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.box .list .content h4 {
+  line-height: 1.2em;
+  font-weight: 600;
+}
+
+.box .list .content p {
+  font-size: 0.75em;
 }
 </style>
