@@ -1,7 +1,6 @@
 import fetchJsonp from "fetch-jsonp";
 import {ref} from "vue";
 
-export let hardwareType = ref()
 export let softwareList = ref()
 export const getHardware = async () => {
     const response = await fetchJsonp("https://www1.miwifi.com/statics/json/index.json");

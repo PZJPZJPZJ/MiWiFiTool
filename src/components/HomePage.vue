@@ -1,19 +1,23 @@
 <template>
   <div class="container">
     <div class="box">
-      <input class="inputBox" type="text" placeholder="输入路由器型号（如RC06STA）" v-model="hwString"
-             @keyup.enter="getSoftware(hwString)">
-      <div class="list" v-for="item in softwareList" :key="item">
-        <div class="content">
-          <h2 class="rank">下载</h2>
-          <a :href=item.url>{{ item.title }}{{ item.version }}</a>
-        </div>
+      <h3>根密码计算器</h3>
+      <div class="top-box">
+        <input class="inputBox" type="text" placeholder="输入路由器SN" v-model="snString"
+               @input="pwdString=calculate(snString)">
+        <input class="inputBox" type="text" placeholder="根密码" v-model="pwdString" readonly>
       </div>
-      <input class="inputBox" type="text" placeholder="输入路由器SN" v-model="snString"
-             @keyup.enter="pwdString=calculate(snString)">
-      <div class="list">
-        <div class="content">
-          <p>根密码:{{ pwdString }}</p>
+      <h3>固件查询器</h3>
+      <div class="bottom-box">
+        <input class="inputBox" type="text" placeholder="输入路由器型号（如RC06STA）" v-model="hwString"
+               @change="getSoftware(hwString)">
+        <div class="list" v-for="item in softwareList" :key="item">
+          <div class="content">
+            <a :href=item.url>{{ item.type }}{{ item.version }}</a>
+            <div class="log-title" v-html="item.title"></div>
+            <div class="log-content" v-html="item.contents"></div>
+            <div class="log-time" v-html="new Date(item.time)"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -22,20 +26,20 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {calculate} from "@/api/GetPassword"
-import {getSoftware, softwareList} from "@/api/GetFirmware";
+import {calculate} from "@/assets/js/GetPassword"
+import {getSoftware, getHardware, softwareList} from "@/assets/js/GetFirmware";
 
-let hwString = ref('')
 let snString = ref('')
 let pwdString = ref('')
-onMounted(() => {
+let hwString = ref('')
 
+onMounted(() => {
 })
 </script>
 
 <style scoped>
 .container {
-  display: flex;
+  display: grid;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -43,9 +47,18 @@ onMounted(() => {
 }
 
 .box {
-  position: relative;
+  width: 60vw;
   min-width: 350px;
-  width: 50vw;
+}
+
+.top-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.bottom-box {
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .list {
@@ -53,7 +66,7 @@ onMounted(() => {
   display: flex;
   padding: 15px;
   border-radius: 10px;
-  margin: 10px 0;
+  margin: 10px;
   cursor: pointer;
   transition: 0.5s;
   overflow: hidden;
@@ -61,22 +74,13 @@ onMounted(() => {
 }
 
 .content {
-  display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.box:hover .list {
-  filter: blur(0px);
-}
-
-.box .list:hover {
-  transform: scale(1);
-  filter: blur(0px);
+  text-align: left;
 }
 
 .inputBox {
-  width: 100%;
+  margin: 10px;
   padding: 15px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 10px;
@@ -88,31 +92,15 @@ onMounted(() => {
   transition: 0.5s;
 }
 
-.box .list .content .rank {
-  position: absolute;
-  right: 20px;
-  color: rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  filter: blur(10px);
-  transition: 0.3s;
+.log-title {
+  font-size: 18px;
 }
 
-.box .list .content .rank small {
-  font-weight: 500;
-  opacity: 0.25;
+.log-content {
+  font-size: 12px;
 }
 
-.box .list:hover .content .rank {
-  opacity: 1;
-  filter: blur(0px);
-}
-
-.box .list .content h4 {
-  line-height: 1.2em;
-  font-weight: 600;
-}
-
-.box .list .content p {
-  font-size: 0.75em;
+.log-time {
+  font-size: 10px;
 }
 </style>
